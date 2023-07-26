@@ -1,0 +1,372 @@
+﻿ĐỀ TÀI QUẢN LÝ SHOP THỜI TRANG
+Họ và tên: 1. Nguyễn Tiến Đạt - MSSV:2121051023
+2. Đinh Thị Kim Anh ¬- MSSV:2121050892
+
+======================================================================================================
+Mô tả:
+NhanVien(MANV,TENNV,GIOITINH,NGAYSINH,DIACHI,SDT,CHUCVU,LUONG,TTHD)
+NhaCungCap(MANCC,TENNCC,DIACHI,SDT)
+NguoiDung(TENTK,MK,LOAITK,TTHD)
+NguoiDung_NhanVien(MAND_NV,TENTK,MANV)
+LoaiHang(MALOAI,TENLOAI,CONGDUNG,TTHD)
+Kho(MAKHO,MAHH,SOLUONG)
+KhachHang(MAKH,TENKH,DIACHI,SDT)
+HangHoa(MAHH,MALOAI,TENHH,XUATXU,GIOITINH,SDT,TT)
+HoaDonNhap(MA_HDN,MANCC,MANV,NGAYNHAP,XONG)
+HoaDonXuat(MA_HDX,MAKH,MANV,NGAYXUAT,XONG)
+ChiTietHoaDonNhap(MACHITIET_HDN,MAHH,MA_HDN,SOLUONG_NHAP,DONGIA_NHAP)
+ChiTietHoaDonXuat(MACHITIET_HDX,MAKHO,MA_HDX,SOLUONG_XUAT,DONGIA_XUAT)
+
+Create database QLSTT
+--Use QLSTT
+------------------create table----------------------
+
+---Nhânviên---
+go
+Create table NhanVien(
+MANV varchar(15)Primary key,
+TENNV nvarchar(30),
+GIOITINH nvarchar(5),
+NGAYSINH date,
+DIACHI nvarchar(50),
+SDT varchar(15),
+CHUCVU text,
+LUONG int,
+TTHD int);
+
+---nhàcungcấp---
+go
+Create table NhaCungCap(
+MANCC varchar(15)Primary key,
+TENNCC nvarchar(50),
+DIACHI nvarchar(50),
+SDT varchar(15));
+
+---NgườiDùng---
+go
+Create table NguoiDung(
+TENTK nvarchar(50) Primary key,
+MK nvarchar(20),
+LOAITK int,
+TTHD int);
+
+---LoạiHàng---
+go
+Create table LoaiHang(
+MALOAI varchar(15) Primary key,
+TENLOAI nvarchar(50),
+CONGDUNG text,
+TTHD int);
+
+---kháchhàng---
+go
+Create table KhachHang(
+MAKH varchar(15)Primary key,
+TENKH nvarchar(30),
+DIACHI nvarchar(50),
+SDT nvarchar(15));
+
+---NgườiDùng_nhânviên---
+go
+Create table NguoiDung_NhanVien(
+MAND_NV int Primary key,
+TENTK nvarchar(50) ,
+MANV varchar(15),
+foreign key (MANV) references NhanVien,
+foreign key (TENTK) references NguoiDung);
+
+---kho---
+go
+Create table Kho(
+MAKHO varchar(15) Primary key,
+MAHH varchar(15),
+SOLUONG int,
+foreign key (MAHH) references HangHoa);
+
+---HóaĐơnnhập---
+go
+Create table HoaDonNhap(
+MA_HDN varchar(15) Primary key,
+MANCC varchar(15),
+MANV varchar(15),
+NGAYNHAP date,
+XONG int,
+foreign key (MANV) references NhanVien,
+foreign key (MANCC) references NhaCungCap);
+
+---HóaĐơnxuất---
+go
+Create table HoaDonXuat(
+MA_HDX varchar(15) Primary key,
+MAKH varchar(15),
+MANV varchar(15),
+NGAYXUAT date,
+XONG int,
+foreign key (MANV) references NhanVien,
+foreign key (MAKH) references KhachHang);
+
+---hànghóa---
+go
+Create table HangHoa(
+MAHH varchar(15) Primary key,
+MALOAI varchar(15),
+TENHH nvarchar(50),
+XUATXU nvarchar(50),
+GIOITINH text ,
+SDT nvarchar(15),
+TT bit ,
+foreign key (MALOAI) references LoaiHang);
+
+---ChiTiếtHóaĐơnNhập---
+go
+Create table ChiTietHoaDonNhap(
+MACHITIET_HDN varchar(15) Primary key,
+MAHH varchar(15),
+MA_HDN varchar(15),
+SOLUONG_NHAP int,
+DONGIA_NHAP int,
+foreign key (MA_HDN) references HoaDonNhap,
+foreign key (MAHH) references HangHoa);
+
+---ChiTiếtHóaĐơnXuất---
+go
+Create table ChiTietHoaDonXuat(
+MACHITIET_HDX varchar(15) Primary key,
+MAKHO varchar(15),
+MA_HDX varchar(15),
+SOLUONG_XUAT int,
+DONGIA_XUAT int,
+foreign key (MA_HDX) references HoaDonXuat,
+foreign key (MAKHO) references Kho);
+
+
+
+-----------------------------------Nhập Dữ Liệu----------------------------------
+
+---NhậpDanhSáchNhânViên---
+	
+select 'Mã nhân viên'= MANV,'Tên nhân viên'= TENNV,'Giới tính'= GIOITINH,'Ngày sinh'= NGAYSINH,'Địa chỉ'= DIACHI,'SĐT'= SDT,'Chức vụ'= CHUCVU,'Lương' = LUONG, 'Trạng thái hoạt động'=
+       case 
+	        when TTHD = 1 then N'Đang Làm Việc'
+			when TTHD = 0 then N'Tạm Nghỉ'
+	   end
+from NhanVien
+Insert into NhanVien values('NV01','Nguyen Hoang Kha' ,'nam','2002/02/05','Vinh Long' ,'0922374863','quan ly'       ,'10000000','1');
+Insert into NhanVien values('NV02','Nguyen Hoang Phuc','nam','2002/05/09','Bac Giang' ,'0385467389','kiem hang'     ,'5000000' ,'1');
+Insert into NhanVien values('NV03','Do Nhat Anh'      ,'nam','2002/07/02','Binh Duong','0983764788','nhan vien sale','4000000' ,'0');
+Insert into NhanVien values('NV04','Ngo Thanh Truc'   ,'nu' ,'2002/05/25','Bac Ninh'  ,'0354655678','tiep thi'      ,'4000000' ,'1');
+Insert into NhanVien values('NV05','Ho Hong Son'      ,'nam','2003/07/06','Bac Ninh'  ,'0930251761','marketing'     ,'6000000' ,'1');
+Insert into NhanVien values('NV06','Phan Thi Nguyet'  ,'nu' ,'2005/12/06','Nam Dinh'  ,'0929751696','CSKH'          ,'3000000' ,'1');
+Insert into NhanVien values('NV07','Vo Bao Lam'       ,'nam','2002/04/17','Hai Phong' ,'0954730357','kiem hang'     ,'5000000' ,'0');
+Insert into NhanVien values('NV08','Phan Quang Hung'  ,'nam','2004/12/13','Hai Duong' ,'0914738411','nhan vien sale','4000000' ,'0');
+Insert into NhanVien values('NV09','Dang Ba Thinh'    ,'nam','2003/10/28','Bac Giang' ,'0971675421','nhan vien sale','4000000' ,'1');
+Insert into NhanVien values('NV010','Hoang Tuan Tu'   ,'nam','2001/09/24','Hai Phong' ,'0999168774','nhan vien sale','4000000' ,'1');
+Insert into NhanVien values('NV011','Nguyen Ngoc Tram','nu' ,'2002/08/09','Bac Giang' ,'0972596686','ke toan'       ,'8000000' ,'1');
+
+
+
+---NhậpDanhSáchNhàCungCấp---
+select 'Mã nhà cung cấp'= MANCC,'Tên nhà cung cấp'= TENNCC,'Địa chỉ'= DIACHI,'SĐT'= SDT
+from NhaCungCap
+Insert into NhaCungCap values('NCC01','KhoHangSi-Lami'               ,'TP.HoChiMinh','0919313433');
+Insert into NhaCungCap values('NCC02','CtyTNHH-PhatThienThanh'       ,'BinhDuong'   ,'02746511596');
+Insert into NhaCungCap values('NCC03','CtyTNHH-ANMACVIETNAM'         ,'TP.HaNoi'    ,'0968688246');
+Insert into NhaCungCap values('NCC04','XuongMay-MIUMIU'              ,'VinhPhuc'    ,'0973202738');
+Insert into NhaCungCap values('NCC05','CtyTNHH-DauTuVaKinhDoanhVietA','TP.HaNoi'    ,'02422003098');
+
+
+---NhậpDanhSáchNgườiDùng---
+select 'Tên tài khoản'= TENTK,'Mật Khẩu'= MK,'Loại tài khoản'= 
+case 
+    when LOAITK = 1 then N'Quản Trị Viên'
+	when LOAITK = 0 then N'Người Dùng'
+end,
+'Trạng thái hoạt động'= 
+case 
+    when TTHD = 1 then N'Đang Trực Tuyến'
+	when TTHD = 0 then N'Ngoại Tuyến'
+end 
+from NguoiDung
+order by 4, 3 desc 
+Insert into NguoiDung values ('hoangkha05@gmail.com'  ,'22374863','1','1');
+Insert into NguoiDung values ('hoangphuc09@gmail.com' ,'85467389','0','1');
+Insert into NguoiDung values ('nhatanh02@gmail.com'   ,'83764788','0','0');
+Insert into NguoiDung values ('thanhtruc25@gmail.com' ,'54655678','0','1');
+Insert into NguoiDung values ('hongson06@gmail.com'   ,'30251761','1','1');
+Insert into NguoiDung values ('phannguyet06@gmail.com','29751696','0','1');
+Insert into NguoiDung values ('baolam17@gmail.com'    ,'54730357','0','0');
+Insert into NguoiDung values ('quanghung13@gmail.com' ,'14738411','0','0');
+Insert into NguoiDung values ('bathinh28@gmail.com'   ,'71675421','0','1');
+Insert into NguoiDung values ('tuantu24@gmail.com'    ,'99168774','0','1');
+Insert into NguoiDung values ('ngoctram09@gmail.com'  ,'72596686','1','1');
+
+---NhậpDanhSáchNgườiDùngNhânViên---
+select 'Mã người dùng'= MAND_NV,'Tên tài khoản'= TENTK,'Mã nhân viên'= MANV
+from NguoiDung_NhanVien
+order by MANV
+Insert into NguoiDung_NhanVien values ('863','hoangkha05@gmail.com','NV01');
+Insert into NguoiDung_NhanVien values ('389','hoangphuc09@gmail.com','NV02');
+Insert into NguoiDung_NhanVien values ('788','nhatanh02@gmail.com','NV03');
+Insert into NguoiDung_NhanVien values ('678','thanhtruc25@gmail.com','NV04');
+Insert into NguoiDung_NhanVien values ('761','hongson06@gmail.com','NV05');
+Insert into NguoiDung_NhanVien values ('696','phannguyet06@gmail.com','NV06');
+Insert into NguoiDung_NhanVien values ('357','baolam17@gmail.com','NV07');
+Insert into NguoiDung_NhanVien values ('411','quanghung13@gmail.com','NV08');
+Insert into NguoiDung_NhanVien values ('421','bathinh28@gmail.com','NV09');
+Insert into NguoiDung_NhanVien values ('774','tuantu24@gmail.com','NV010');
+Insert into NguoiDung_NhanVien values ('686','ngoctram09@gmail.com','NV011');
+	
+---NhậpDanhSáchLoạiHàng---
+
+select 'Mã loại'= MALOAI,'Tên loại'= TENLOAI,'Mô tả'= CONGDUNG,'Tình trạng' = 
+case 
+    when TTHD = 1 then N'Còn hàng'
+	when TTHD = 0 then N'Hết hàng'
+end
+from LoaiHang
+order by 4
+Insert into LoaiHang values('P01','mu luoi chai','nam,nu','1');
+Insert into LoaiHang values('P02','ao thun','nam,nu','1');
+Insert into LoaiHang values('P03','ao phong','nam,nu','1');
+Insert into LoaiHang values('P04','ao khoac','nam,nu','0');
+Insert into LoaiHang values('P05','quan jean','nam,nu','1');
+Insert into LoaiHang values('P06','vay','nu','1');
+Insert into LoaiHang values('P07','quan bo','nam,nu','0');
+Insert into LoaiHang values('P08','quan dui','nam,nu','1');
+
+---NhậpDanhSáchHàngHóa---
+
+select 'Mã hàng hóa' = MAHH, 'Mã loại'= MALOAI,'Tên hàng hóa'= TENHH,'Xuất xứ' = XUATXU,
+'số điện thoại lấy hàng' = SDT, 'Giới tính'= GIOITINH, 'Tình trạng'=
+case
+      when TT = 1 then N'Còn hàng'
+      when TT = 0 then N'Hết hàng'
+end 
+from HangHoa
+order by 7, 2, 4, 1 desc
+Insert into HangHoa values('H021','P02','ao thun tay lo HADES ALTERNATIVE TEE','Ha Noi','0968688246','nam,nu','1');
+Insert into HangHoa values('H022','P02','ao thun tay lo SADBOY'               ,'Vinh Phuc','0973202738','nam','1');
+Insert into HangHoa values('H051','P05','quan jean Baggy phom suong rong'     ,'Ho Chi Minh','0919313433','nam','1');
+Insert into HangHoa values('H052','P05','quan jean rach goi'                  ,'Vinh Phuc','0973202738','nam,nu','1');
+Insert into HangHoa values('H053','P05','quan jean lung cao ong rong'         ,'Vinh Phuc','0973202738','nu','1');
+Insert into HangHoa values('H061','P06','vay tre vai cong chua'               ,'BinhDuong','02746511596','nu','1');
+Insert into HangHoa values('H062','P06','dam trung nien sang trong'           ,'Ho Chi Minh','0919313433','nam','0');
+Insert into HangHoa values('H081','P08','quan dui the thao'                   ,'Vinh Phuc','0973202738','nam,nu','1');
+Insert into HangHoa values('H082','P08','quan dui ngu ren'                    ,'Ha Noi','0968688246','nu','1');
+Insert into HangHoa values('H071','P07','quan bo xe goi'                      ,'Ha Noi','0968688246','nam,nu','0');
+Insert into HangHoa values('H072','P07','quan bo ong rong'                    ,'Ha Noi','0968688246','nam,nu','0');
+Insert into HangHoa values('H041','P04','ao khoac bomber'                     ,'Ha Noi','0968688246','nam,nu','0');
+Insert into HangHoa values('H042','P04','ao khoac varsity jacket'             ,'Ha Noi','0968688246','nam,nu','0');
+Insert into HangHoa values('H043','P04','ao khoac gio'                        ,'Ha Noi','0968688246','nam,nu','0');
+Insert into HangHoa values('H011','P01','mu luoi trai HEART'                  ,'BinhDuong','02746511596','nam,nu','1');
+Insert into HangHoa values('H012','P01','mu luoi trai Ulzzang form unisex'    ,'Ha Noi','0968688246','nam,nu','1');
+Insert into HangHoa values('H031','P03','ao phong co tron'                    ,'Ho Chi Minh','0919313433','nam,nu','1');
+Insert into HangHoa values('H032','P03','ao phong den tron'                   ,'Ha Noi','0968688246','nam','1');
+Insert into HangHoa values('H033','P03','ao phong rong oversize'              ,'Ha Noi','0968688246','nam,nu','1');
+
+
+---NhậpDanhSáchKho---
+
+select 'Mã kho' = MAKHO, 'Mã hàng hóa' = MAHH, 'Số lượng' = SOLUONG
+from Kho
+Insert into Kho values('K12','H021','2602');
+Insert into Kho values('K15','H051','2346');
+Insert into Kho values('K16','H061','6572');
+Insert into Kho values('K18','H081','2556');
+Insert into Kho values('K17','H071','0');
+Insert into Kho values('K14','H041','0');
+Insert into Kho values('K11','H011','5212');
+Insert into Kho values('K13','H031','987');
+Insert into Kho values('K21','H012','5927');
+Insert into Kho values('K22','H022','8126');
+Insert into Kho values('K23','H032','1573');
+Insert into Kho values('K24','H042','0');
+Insert into Kho values('K25','H052','7621');
+Insert into Kho values('K26','H062','3253');
+Insert into Kho values('K27','H072','0');
+Insert into Kho values('K28','H082','8162');
+Insert into Kho values('K33','H033','3324');
+Insert into Kho values('K34','H043','1521');
+Insert into Kho values('K35','H053','2003');
+
+
+
+---NhậpDanhSáchKháchHàng---
+
+select 'Mã khách hàng'= MAKH,'Tên khách hàng'= TENKH,'Địa chỉ'= DIACHI,'SĐT'= SDT
+from KhachHang
+Insert into KhachHang values('KH01','Ho Uyen Phuong','Ha Noi'      ,'0916222539');
+Insert into KhachHang values('KH02','Pham Nguyet Anh','Ho Chi Minh','0937256090');
+Insert into KhachHang values('KH03','Ho Chan Hung','Da Nang'       ,'0914064715');
+Insert into KhachHang values('KH04','Vu Phuong Diem','Ha Noi'      ,'0915928768');
+Insert into KhachHang values('KH05','Vo Giang Thanh','Ha Noi'      ,'0973012265');
+Insert into KhachHang values('KH06','Ly Bao Chau','Hai Phong'      ,'0962289962');
+Insert into KhachHang values('KH07','Nguyen Anh Trang','Ha Noi'    ,'0963787863');
+Insert into KhachHang values('KH08','Nguyen Cam Ly','Vinh Phuc'    ,'0908154509');
+Insert into KhachHang values('KH09','Tran Phuong Dung','Ha Noi'    ,'0934546275');
+Insert into KhachHang values('KH10','Phan Ngan Thanh','Ho Chi Minh','0932050777');
+Insert into KhachHang values('KH11','Duong Truong Vinh','Thai Binh','0916010777');
+Insert into KhachHang values('KH12','Huynh Thao Mai','Ha Noi'      ,'0933987224');
+Insert into KhachHang values('KH13','Phan My Hanh','Thai Duong'    ,'0929790171');
+
+---NhậpDanhSáchHóaĐơnNhập---
+
+select 'Mã hóa đơn nhập'= MA_HDN,'Mã nhà cung cấp'= MANCC,'Mã nhân viên'= MANV,'Ngày nhập'= NGAYNHAP,'Trạng thái'=
+       case 
+	        when XONG = 1 then N'Xong'
+			when XONG = 0 then N'Đang chờ'
+	   end
+from HoaDonNhap
+Insert into HoaDonNhap values('N0001','NCC01','NV02','2023/03/10','1');
+Insert into HoaDonNhap values('N0002','NCC02','NV02','2023/03/12','1');
+Insert into HoaDonNhap values('N0003','NCC03','NV02','2023/03/14','1');
+Insert into HoaDonNhap values('N0004','NCC04','NV02','2023/03/15','1');
+Insert into HoaDonNhap values('N0005','NCC05','NV02','2023/03/17','0');
+
+---NhậpDanhSáchHóaĐơnXuất---
+
+select 'Mã hóa đơn xuất'= MA_HDX,'Mã khách hàng'= MAKH,'Mã nhân viên'= MANV,'Ngày xuất'= NGAYXUAT,'Trạng thái'=
+       case 
+	        when XONG = 1 then N'Xong'
+			when XONG = 0 then N'Đang chờ'
+	   end
+from HoaDonXuat
+Insert into HoaDonXuat values('X0001','KH08','NV010','2023/03/10','1');
+Insert into HoaDonXuat values('X0008','KH12','NV010','2023/03/11','1');
+Insert into HoaDonXuat values('X0002','KH09','NV09','2023/03/10','1');
+Insert into HoaDonXuat values('X0003','KH11','NV010','2023/03/10','1');
+Insert into HoaDonXuat values('X0009','KH05','NV09','2023/03/11','0');
+Insert into HoaDonXuat values('X0010','KH03','NV010','2023/03/11','1');
+Insert into HoaDonXuat values('X0004','KH06','NV010','2023/03/10','1');
+Insert into HoaDonXuat values('X0005','KH02','NV09','2023/03/10','1');
+Insert into HoaDonXuat values('X0011','KH01','NV010','2023/03/11','0');
+Insert into HoaDonXuat values('X0006','KH10','NV010','2023/03/10','1');
+Insert into HoaDonXuat values('X0007','KH04','NV09','2023/03/10','1');
+
+---NhậpDanhSáchChiTiếtHóaĐơnNhập---
+select 'Mã chi tiết hóa đơn nhập'= MACHITIET_HDN,'Mã hàng hóa'= MAHH,'Mã hóa đơn nhập'= MA_HDN,
+'Số lượng nhập'= SOLUONG_NHAP,'Đơn giá'= DONGIA_NHAP
+from ChiTietHoaDonNhap
+Insert into ChiTietHoaDonNhap values('CTN0001','H012','N0001','5000','100000000');
+Insert into ChiTietHoaDonNhap values('CTN0002','H021','N0002','1000','30000000');
+Insert into ChiTietHoaDonNhap values('CTN0003','H052','N0003','3000','300000000');
+Insert into ChiTietHoaDonNhap values('CTN0004','H081','N0004','1000','40000000');
+Insert into ChiTietHoaDonNhap values('CTN0005','H061','N0005','4000','360000000');
+
+---NhậpDanhSáchChiTiếtHóaĐơnXuất---
+select 'Mã chi tiết hóa đơn xuất'= MACHITIET_HDX,'Mã kho'= MAKHO,'Mã hóa đơn xuất'= MA_HDX,
+'Số lượng xuất'= SOLUONG_XUAT,'Đơn giá'= DONGIA_XUAT
+from ChiTietHoaDonXuat
+Insert into ChiTietHoaDonXuat values('CTX0001','K11','X0001','2500','75000000');
+Insert into ChiTietHoaDonXuat values('CTX0002','K13','X0002','700','35000000');
+Insert into ChiTietHoaDonXuat values('CTX0003','K15','X0003','2000','180000000');
+Insert into ChiTietHoaDonXuat values('CTX0004','K18','X0004','2000','60000000');
+Insert into ChiTietHoaDonXuat values('CTX0005','K16','X0005','5000','550000000');
+Insert into ChiTietHoaDonXuat values('CTX0006','K25','X0006','6000','650000000');
+Insert into ChiTietHoaDonXuat values('CTX0007','K35','X0007','1000','80000000');
+Insert into ChiTietHoaDonXuat values('CTX0008','K28','X0008','4000','160000000');
+Insert into ChiTietHoaDonXuat values('CTX0009','K34','X0009','500','55000000');
+Insert into ChiTietHoaDonXuat values('CTX0010','K23','X0010','700','42000000');
+Insert into ChiTietHoaDonXuat values('CTX0011','K21','X0011','2900','145000000');
+
+
